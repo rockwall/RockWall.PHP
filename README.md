@@ -300,9 +300,9 @@ Response object:
 ### Installation
 
 Download the engine as ZIP archive from
-[[here](https://github.com/w3core/SVCServer.PHP/archive/master.zip "ZIP archive")]
+[[here](https://github.com/rockwall/RockWall.PHP/archive/master.zip "ZIP archive")]
 and unpack it OR clone GIT project of engine from
-[[here](https://github.com/w3core/SVCServer.PHP.git "GIT repository")].
+[[here](https://github.com/rockwall/RockWall.PHP.git "GIT repository")].
 
 Put the instance of engine beyond the pale of document root.
 
