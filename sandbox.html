@@ -177,6 +177,44 @@
             color:#333;
             text-shadow:0px 1px #5cf;
         }
+
+        .fork-me {
+            display:block;
+            z-index:100;
+            position:fixed;
+            bottom:0;
+            right:0;
+            transform:rotate(-45deg)
+                    translate3d(65px,15px,0);
+            box-shadow:0 0 10px #fff,
+                     inset 0 0 0 2px #fff;
+            padding:8px 50px;
+            background:#eee;
+            color:#111;
+            text-shadow:0 1px #fff;
+            font:normal bold 12px/12px sans-serif;
+            text-decoration:none;
+            white-space:nowrap;
+            transition:all .1s linear;
+        }
+        .fork-me:before {
+            content:"";
+            display:block;
+            position:absolute;
+            top:2px;
+            bottom:2px;
+            left:0;
+            width:100%;
+            border:0 dotted #ccc;
+            border-width:2px 0;
+        }
+        .fork-me:hover {
+            background:#09e;
+            box-shadow:0 0 15px #000;
+            color:#fff;
+            text-shadow:0 -1px #048;
+        }
+        .fork-me:hover:before {border-color:#2bf}
     </style>
 </head>
 <body>
@@ -215,6 +253,8 @@
             <textarea class="body scrollbar" placeholder="Nothing to show yet..." spellcheck="false" readonly></textarea>
         </div>
     </form>
+
+    <a class="fork-me" target="_blank" href="https://github.com/rockwall/RockWall.PHP">Fork me on GitHub</a>
 
     <script type="text/javascript">
 
