@@ -98,7 +98,7 @@ class svc_namespace_class {
 > "[sandbox.html](sandbox.html "Download the file and put it where you need")"
 > file, that can be useful for testing and development of your server from client.
 > 
-> [ [Online version](https://rawgit.com/rockwall/RockWall.PHP/master/sandbox.html "Visit online version of RockWall REST Server Sandbox") ] (For remote testing only)
+> [Online version](https://rawgit.com/rockwall/RockWall.PHP/master/sandbox.html "Visit online version of RockWall REST Server Sandbox") (For remote testing only)
 
 ## Client API
 
