@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>RockWall.PHP by rockwall</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">RockWall.PHP</h1>
+      <h2 class="project-tagline">Tiny (less than 30kb) and powerful JSON RESTful web-service engine for PHP</h2>
+      <a href="https://github.com/rockwall/RockWall.PHP" class="btn">View on GitHub</a>
+      <a href="https://github.com/rockwall/RockWall.PHP/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/rockwall/RockWall.PHP/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="rockwallphp" class="anchor" href="#rockwallphp" aria-hidden="true"><span class="octicon octicon-link"></span></a>RockWall.PHP</h1>
+
+<p>Tiny (less than 30kb) and powerful JSON RESTful web-service engine for PHP <img class="emoji" title=":elephant:" alt=":elephant:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f418.png" height="20" width="20" align="absmiddle">.</p>
+
+<p>Basic useful feature list:</p>
+
+<ul>
+<li>Multiple requests (REST API) via single HTTP request.</li>
+<li>Unified and stable response format for all requests.</li>
+<li>Endpoint method execution by dependency of type detection (static or whether not).</li>
+<li>Request modifiers feature. Allows to declare which type of class instance should be used for each request (New instance, Singleton or new instance of Singleton).</li>
+<li>Fatal exceptions catching for every endpoint on low-level.</li>
+<li>Cross-domain AJAX requests support.</li>
+<li>Database PDO singleton instance available.</li>
+<li>One instance of engine for multiple different REST servers with different configurations.</li>
+<li>Extra simple in use and well structured in filesystem.</li>
+<li>Client side sandbox available for testing.</li>
+</ul>
+
+<h2>
+<a id="quick-start-example" class="anchor" href="#quick-start-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Start Example</h2>
+
+<h3>
+<a id="client-side" class="anchor" href="#client-side" aria-hidden="true"><span class="octicon octicon-link"></span></a>Client side</h3>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> url <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>//your.server.url<span class="pl-pds">'</span></span>;
+<span class="pl-k">var</span> request <span class="pl-k">=</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>request<span class="pl-pds">"</span></span><span class="pl-k">:</span>
+        [
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>namespace/class/method<span class="pl-pds">"</span></span> , <span class="pl-s"><span class="pl-pds">"</span>args<span class="pl-pds">"</span></span><span class="pl-k">:</span>{<span class="pl-s"><span class="pl-pds">"</span>Awesome<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Hello World!<span class="pl-pds">"</span></span>} },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>namespace/class/method<span class="pl-pds">"</span></span> , <span class="pl-s"><span class="pl-pds">"</span>args<span class="pl-pds">"</span></span><span class="pl-k">:</span>{<span class="pl-s"><span class="pl-pds">"</span>makeError<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">true</span>} },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>not/existing/endpoint<span class="pl-pds">"</span></span> },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>error-command<span class="pl-pds">"</span></span>         },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>namespace/class/method<span class="pl-pds">"</span></span>}
+        ]
+};
+
+$.ajax(url, {
+    type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>POST<span class="pl-pds">'</span></span>,
+    data<span class="pl-k">:</span> request,
+    <span class="pl-en">success</span>: <span class="pl-k">function</span> (<span class="pl-smi">response</span>) {
+        <span class="pl-c">// See "Server response"</span>
+        <span class="pl-en">console</span><span class="pl-c1">.log</span>(response);
+    }
+});</pre></div>
+
+<h3>
+<a id="server-side" class="anchor" href="#server-side" aria-hidden="true"><span class="octicon octicon-link"></span></a>Server side</h3>
+
+<div class="highlight highlight-php"><pre><span class="pl-s1"><span class="pl-k">&lt;</span>?<span class="pl-c1">php</span> <span class="pl-c">// File: {server}/namespace/class.php</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">svc_namespace_class</span> {</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">private</span> <span class="pl-smi">$increment</span> <span class="pl-k">=</span> <span class="pl-c1">0</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span></span>
+<span class="pl-s1">    <span class="pl-k">function</span> <span class="pl-en">method</span> (<span class="pl-k">array</span> <span class="pl-smi">$args</span>, <span class="pl-smi">$cmd</span>) {</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">increment</span><span class="pl-k">++</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">if</span> (<span class="pl-c1">isset</span>(<span class="pl-smi">$args</span>[<span class="pl-s"><span class="pl-pds">"</span>makeError<span class="pl-pds">"</span></span>])) {</span>
+<span class="pl-s1">            <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">response</span>(<span class="pl-c1">null</span>, <span class="pl-s"><span class="pl-pds">"</span>Awesome error<span class="pl-pds">"</span></span>, <span class="pl-c1">12345</span>);</span>
+<span class="pl-s1">        }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$data</span> <span class="pl-k">=</span> <span class="pl-smi">$args</span>;</span>
+<span class="pl-s1">        <span class="pl-smi">$data</span>[<span class="pl-s"><span class="pl-pds">"</span>increment<span class="pl-pds">"</span></span>] <span class="pl-k">=</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span><span class="pl-smi">increment</span>;</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">response</span>(<span class="pl-smi">$data</span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span></pre></div>
+
+<h3>
+<a id="server-response" class="anchor" href="#server-response" aria-hidden="true"><span class="octicon octicon-link"></span></a>Server response</h3>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-c">// response variable in success callback</span>
+{
+    <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span>  <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Awesome error<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span>   <span class="pl-k">:</span> <span class="pl-c1">12345</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>errors<span class="pl-pds">"</span></span> <span class="pl-k">:</span>
+        {
+            <span class="pl-c">// The key is the same as index in the data array</span>
+            <span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-k">:</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Awesome error<span class="pl-pds">"</span></span> , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">12345</span> } ,
+            <span class="pl-s"><span class="pl-pds">"</span>2<span class="pl-pds">"</span></span> <span class="pl-k">:</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Not found<span class="pl-pds">"</span></span> , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">404</span> } ,
+            <span class="pl-s"><span class="pl-pds">"</span>3<span class="pl-pds">"</span></span> <span class="pl-k">:</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Invalid request<span class="pl-pds">"</span></span>  , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">400</span> } ,
+        },
+    <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span>   <span class="pl-k">:</span>
+        [
+         <span class="pl-c">/*0*/</span> { <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span> <span class="pl-k">:</span> {<span class="pl-s"><span class="pl-pds">"</span>increment<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">1</span> , <span class="pl-s"><span class="pl-pds">"</span>Awesome<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Hello World!<span class="pl-pds">"</span></span>} } ,
+         <span class="pl-c">/*1*/</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Awesome error<span class="pl-pds">"</span></span> , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">12345</span> },
+         <span class="pl-c">/*2*/</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Not found<span class="pl-pds">"</span></span> , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">404</span> } ,
+         <span class="pl-c">/*3*/</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Invalid request<span class="pl-pds">"</span></span>  , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">400</span> } ,
+         <span class="pl-c">/*4*/</span> { <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span> <span class="pl-k">:</span> {<span class="pl-s"><span class="pl-pds">"</span>increment<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">3</span>} }
+        ]
+}</pre></div>
+
+<blockquote>
+<p>Note:
+In the root directory of engine you can find
+"<a href="sandbox.html" title="Download the file and put it where you need">sandbox.html</a>"
+file, that can be useful for testing and development of your server from client.</p>
+</blockquote>
+
+<h2>
+<a id="client-api" class="anchor" href="#client-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Client API</h2>
+
+<p>This engine allows quick and simple to create data channel between client and
+server and provides opportunity to execute multiple REST requests via single
+HTTP request that increases performance of client through decreasing amount of
+HTTP requests.</p>
+
+<p>To working with any endpoint of server and generally with server, used unified
+system of Request and Response objects.</p>
+
+<h3>
+<a id="request-object" class="anchor" href="#request-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request object</h3>
+
+<p>Request object allows to describe which endpoints of server should be called,
+an order of execution, environment of execution for every endpoint and which
+arguments should to be passed for every endpoint call.</p>
+
+<h4>
+<a id="request-object-structure" class="anchor" href="#request-object-structure" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request object structure</h4>
+
+<p>Request object should to be passed to the server as <code>request</code> variable that is
+an array of objects.</p>
+
+<p>Every object of array describes the call to the different endpoints of the
+server and should contains the <code>cmd</code> (command) property and <code>args</code> property as
+an optional.</p>
+
+<div class="highlight highlight-javascript"><pre>{
+  <span class="pl-s"><span class="pl-pds">"</span>request<span class="pl-pds">"</span></span><span class="pl-k">:</span>
+    [
+      { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">String</span> , <span class="pl-s"><span class="pl-pds">"</span>args<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">Object</span> },
+      ...
+    ]
+}</pre></div>
+
+<p>The command is a slash separated string that describes a path to the endpoint
+on the server and should consists of <code>namespace</code>, <code>class</code> and <code>method</code>.
+The <code>class</code> can be not defined for the case when is the main class of
+<code>namespace</code> (has a name that same as namespace name).</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>namespace/class/method<span class="pl-pds">"</span></span></pre></div>
+
+<p>or</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>namespace/method<span class="pl-pds">"</span></span></pre></div>
+
+<p>Also the command can contain modifier that defines which environment should be
+used for each call.</p>
+
+<h4>
+<a id="modifiers" class="anchor" href="#modifiers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Modifiers</h4>
+
+<p>The method can be called at the new instance of class or Singleton instance
+that life cycle limited by life cycle of HTTP request.
+The modifier is a command prefix that can be one of the follow:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Modifier</th>
+<th align="left">Description</th>
+<th align="left">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">@</td>
+<td align="left">Creates the new instance of class for method execution</td>
+<td align="left">@namespace/class/method</td>
+</tr>
+<tr>
+<td align="center">&amp;</td>
+<td align="left">
+<code>Default</code> Uses Singleton instance of class or creates if it in not exists yet</td>
+<td align="left">&amp;namespace/class/method</td>
+</tr>
+<tr>
+<td align="center">!</td>
+<td align="left">Replaces old Singleton instance by new instance of class and uses it</td>
+<td align="left">!namespace/class/method</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Example for JavaScript AJAX request by using jQuery</strong></p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> url <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>//your.server.url<span class="pl-pds">'</span></span>;
+<span class="pl-k">var</span> request <span class="pl-k">=</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>request<span class="pl-pds">"</span></span><span class="pl-k">:</span>
+        [
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>namespace/class/method<span class="pl-pds">"</span></span> , <span class="pl-s"><span class="pl-pds">"</span>args<span class="pl-pds">"</span></span><span class="pl-k">:</span>{<span class="pl-s"><span class="pl-pds">"</span>hello<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>world<span class="pl-pds">"</span></span>} },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>namespace/method<span class="pl-pds">"</span></span>      },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>&amp;namespace/method<span class="pl-pds">"</span></span>     },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>!namespace/method<span class="pl-pds">"</span></span>     },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>@namespace/method<span class="pl-pds">"</span></span>     },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>not/existing/endpoint<span class="pl-pds">"</span></span> },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>error-command<span class="pl-pds">"</span></span>         }
+        ]
+};
+
+$.ajax(url, {
+    type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>POST<span class="pl-pds">'</span></span>,
+    data<span class="pl-k">:</span> request,
+    <span class="pl-en">success</span>: <span class="pl-k">function</span> (<span class="pl-smi">response</span>) {
+        <span class="pl-c">// Process response object here</span>
+        <span class="pl-en">console</span><span class="pl-c1">.log</span>(response);
+    }
+});</pre></div>
+
+<h3>
+<a id="response-object" class="anchor" href="#response-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>Response object</h3>
+
+<p>The engine provides unified response object structure for working with every
+endpoint of server and generally with server that allows to simplify for using
+and understanding it for even for junior developer.</p>
+
+<p><strong>Response object instance can be of two types:</strong></p>
+
+<p><code>Single</code> : Simple object with <code>data</code> property when successful whether <code>error</code>
+           and <code>code</code> properties when error occurred.</p>
+
+<p><strong>Result is successful</strong></p>
+
+<div class="highlight highlight-javascript"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span> <span class="pl-k">:</span> Mixed
+}</pre></div>
+
+<p><strong>When error occured</strong></p>
+
+<div class="highlight highlight-javascript"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span> <span class="pl-k">:</span> <span class="pl-c1">String</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span>  <span class="pl-k">:</span> <span class="pl-c1">Number</span>
+}</pre></div>
+
+<p><code>Multiple</code> : is a collection of <code>simple</code> responses where <code>error</code> and <code>code</code>
+             properties is an error of FIRST simple response that returns error
+             and located in <code>data</code> array.</p>
+
+<p>The list of all errors of <code>multiple</code> response is available in <code>errors</code> object.</p>
+
+<p><code>errors</code> - is an object of objects. Each child of <code>errors</code> is object that named
+           as his <code>index</code> in <code>data</code> array.</p>
+
+<p><strong>Multiple response structure</strong></p>
+
+<div class="highlight highlight-javascript"><pre>{
+    <span class="pl-c">// [Optional] An error message of FIRST simple response of the queue that returns error</span>
+    <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span>  <span class="pl-k">:</span> <span class="pl-c1">String</span>,
+    <span class="pl-c">// [Optional] An error code of FIRST simple response of the queue that returns error</span>
+    <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span>   <span class="pl-k">:</span> <span class="pl-c1">Number</span>,
+    <span class="pl-c">// [Optional] The list of all errors of the queue</span>
+    <span class="pl-s"><span class="pl-pds">"</span>errors<span class="pl-pds">"</span></span> <span class="pl-k">:</span>
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>(index in data array)<span class="pl-pds">"</span></span> <span class="pl-k">:</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">String</span> , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">Number</span> } ,
+            <span class="pl-c">// ...</span>
+        },
+    <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span>   <span class="pl-k">:</span>
+        [
+            { <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span> <span class="pl-k">:</span>Mixed },
+            { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">String</span> , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">Number</span> } ,
+            <span class="pl-c">// ...</span>
+        ]
+}</pre></div>
+
+<p><strong>For example</strong></p>
+
+<p>The client sent request to the server and server returns errors for the second
+and third commands.</p>
+
+<p>Request object:</p>
+
+<div class="highlight highlight-javascript"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>request<span class="pl-pds">"</span></span><span class="pl-k">:</span>
+        [
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>namespace/class/method<span class="pl-pds">"</span></span> },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>not/existing/endpoint<span class="pl-pds">"</span></span>  },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>error-command<span class="pl-pds">"</span></span>          },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>namespace/method<span class="pl-pds">"</span></span>       }
+        ]
+}</pre></div>
+
+<p>Response object:</p>
+
+<div class="highlight highlight-javascript"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span>  <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>An error occurred (second)<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span>   <span class="pl-k">:</span> <span class="pl-c1">12345</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>errors<span class="pl-pds">"</span></span> <span class="pl-k">:</span>
+        {
+            <span class="pl-c">// The key is the same as index in the data array</span>
+            <span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span> <span class="pl-k">:</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>An error occurred (second)<span class="pl-pds">"</span></span> , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">12345</span> } ,
+            <span class="pl-s"><span class="pl-pds">"</span>2<span class="pl-pds">"</span></span> <span class="pl-k">:</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>An error occurred (third)<span class="pl-pds">"</span></span>  , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">67890</span> } ,
+        },
+    <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span>   <span class="pl-k">:</span>
+        [
+         <span class="pl-c">/*0*/</span> { <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span> <span class="pl-k">:</span> {<span class="pl-c">/*Some data*/</span>} } ,
+         <span class="pl-c">/*1*/</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>An error occurred (second)<span class="pl-pds">"</span></span> , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">12345</span> } ,
+         <span class="pl-c">/*2*/</span> { <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>An error occurred (third)<span class="pl-pds">"</span></span>  , <span class="pl-s"><span class="pl-pds">"</span>code<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">67890</span> } ,
+         <span class="pl-c">/*3*/</span> { <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span> <span class="pl-k">:</span> {<span class="pl-c">/*Some data*/</span>} }
+        ]
+}</pre></div>
+
+<h2>
+<a id="server-api" class="anchor" href="#server-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Server API</h2>
+
+<blockquote>
+<p>The engine is written it so that allows to reuse one instance for multiple
+different REST servers with different configurations. Has no sense to
+duplicate engine instances for every REST server. Practically, will be better
+put one instance of engine beyond the pale of document root and include it
+where it need.</p>
+</blockquote>
+
+<h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<p>Download the engine as ZIP archive from
+[<a href="https://github.com/rockwall/RockWall.PHP/archive/master.zip" title="ZIP archive">here</a>]
+and unpack it OR clone GIT project of engine from
+[<a href="https://github.com/rockwall/RockWall.PHP.git" title="GIT repository">here</a>].</p>
+
+<p>Put the instance of engine beyond the pale of document root.</p>
+
+<h3>
+<a id="integration" class="anchor" href="#integration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Integration</h3>
+
+<p>Create your REST server that should include the main endpoint file <code>index.php</code>,
+config file <code>config.php</code> and the folder <code>svc</code> where you want to deploy your services.</p>
+
+<blockquote>
+<p>Any part of your REST-server is independent and can be renamed or moved where you want.
+The only thing that you have to do is to define path to the parent folder of your services
+in configuration file and include to endpoint file your configuration file.</p>
+</blockquote>
+
+<p>The <code>config.php</code> file:</p>
+
+<p>The configuration file should implement the <code>config</code> class with structure same as shown below</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">config</span> {</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">static</span></span>
+<span class="pl-s1">    <span class="pl-k">function</span> <span class="pl-en">db</span> () { <span class="pl-c">//optional</span></span>
+<span class="pl-s1">        <span class="pl-smi">$o</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">stdClass</span>;</span>
+<span class="pl-s1">        <span class="pl-smi">$o</span><span class="pl-k">-&gt;</span><span class="pl-smi">host</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>Your DB Host<span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1">        <span class="pl-smi">$o</span><span class="pl-k">-&gt;</span><span class="pl-smi">user</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>Your DB User<span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1">        <span class="pl-smi">$o</span><span class="pl-k">-&gt;</span><span class="pl-smi">pasw</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>Your DB Password<span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1">        <span class="pl-smi">$o</span><span class="pl-k">-&gt;</span><span class="pl-smi">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>Your DB Name<span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$o</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">static</span></span>
+<span class="pl-s1">    <span class="pl-k">function</span> <span class="pl-en">dir</span> () {</span>
+<span class="pl-s1">        <span class="pl-smi">$o</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">stdClass</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-c">// Enter your path to the directory where located your services</span></span>
+<span class="pl-s1">        <span class="pl-smi">$o</span><span class="pl-k">-&gt;</span><span class="pl-smi">svc</span> <span class="pl-k">=</span> <span class="pl-c1">__DIR__</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$o</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">static</span></span>
+<span class="pl-s1">    <span class="pl-k">function</span> <span class="pl-en">main</span> () {</span>
+<span class="pl-s1">        <span class="pl-smi">$o</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">stdClass</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-c">// The classname prefix. Format: {prefix}_{namespace}[_{class}]</span></span>
+<span class="pl-s1">        <span class="pl-smi">$o</span><span class="pl-k">-&gt;</span><span class="pl-smi">prefix</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>svc<span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-c">// @ : The new instance | &amp; : Singleton | ! : Rewrite Singleton instance</span></span>
+<span class="pl-s1">        <span class="pl-smi">$o</span><span class="pl-k">-&gt;</span><span class="pl-smi">defaultModifier</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>&amp;<span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-c">// Use default modifier for all or not</span></span>
+<span class="pl-s1">        <span class="pl-smi">$o</span><span class="pl-k">-&gt;</span><span class="pl-smi">strictModifier</span> <span class="pl-k">=</span> <span class="pl-c1">false</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-smi">$o</span>;</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">}</span></pre></div>
+
+<p>The <code>index.php</code> file:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">// Include the `.inc.php` file that located in the main directory of engine</span></span>
+<span class="pl-s1"><span class="pl-k">require_once</span>(<span class="pl-s"><span class="pl-pds">'</span>/engine/.inc.php<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">// Include your custom configuration file</span></span>
+<span class="pl-s1"><span class="pl-k">require_once</span>(<span class="pl-s"><span class="pl-pds">'</span>/servers/provider.X/config.php<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">// Start the engine initialization process</span></span>
+<span class="pl-s1"><span class="pl-c1">svc</span><span class="pl-k">::</span>init();</span></pre></div>
+
+<p>In practice, the most optimal and safe structure in file system is presented below:</p>
+
+<pre><code>[engine]
+  | .inc.php
+
+[servers]
+  | [provider.1]
+  | [provider.2]
+  | ...
+  | [provider.X]
+      | config.php
+      | [namespace1]
+      | [namespace2]
+      | ...
+      | [namespaceX]
+          | class1.php
+          | class2.php
+          | ...
+          | classX.php
+
+[www]
+  | [document root of provider.1]
+  | [document root of provider.2]
+  | ...
+  | [document root of provider.X]
+      | index.php
+</code></pre>
+
+<h3>
+<a id="services-implementation" class="anchor" href="#services-implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Services implementation</h3>
+
+<p><strong>Agreements of implementation:</strong></p>
+
+<ul>
+<li>Each endpoint is a public method of class.</li>
+<li>Each class should be implemented into the own file.</li>
+<li>The name of file should to be same as logical name of class.</li>
+<li>The name of class should contain an information about the namespace,
+own logic name and the prefix that is defined by configuration that
+required to avoid name collisions.</li>
+<li>The name of main class (if exists) of namespace should contain all
+foregoing information, except of logical name of class that is same
+as name of namespace.</li>
+<li>Any endpoints can be logically combined as methods of mutual class
+and/or by mutual folder of classes (aka. namespace).</li>
+<li>Any method can be called at the new instance of class or Singleton instance
+that life cycle limited by life cycle of HTTP request and defined by client
+(see <a href="#modifiers">Modifiers</a>) or configuration
+(see <a href="#integration">defaultModifier, strictModifier</a>).</li>
+<li>Each endpoint should return an instance of <code>response</code> class that
+allows to declare besides of response data also error of execution.</li>
+</ul>
+
+<p>Based on the foregoing we have something like this:</p>
+
+<p>For the client side request</p>
+
+<div class="highlight highlight-javascript"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>request<span class="pl-pds">"</span></span><span class="pl-k">:</span>
+        [
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>namespace/class/method<span class="pl-pds">"</span></span> , <span class="pl-s"><span class="pl-pds">"</span>args<span class="pl-pds">"</span></span><span class="pl-k">:</span>{<span class="pl-s"><span class="pl-pds">"</span>hello<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>world<span class="pl-pds">"</span></span>} },
+          { <span class="pl-s"><span class="pl-pds">"</span>cmd<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>namespace/method<span class="pl-pds">"</span></span>       , <span class="pl-s"><span class="pl-pds">"</span>args<span class="pl-pds">"</span></span><span class="pl-k">:</span>{<span class="pl-s"><span class="pl-pds">"</span>hello<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>world<span class="pl-pds">"</span></span>} }
+        ]
+}</pre></div>
+
+<p>On the server side should be implemented next</p>
+
+<p><code>namespace/class.php</code>:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">svc_namespace_class</span> {</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">method</span> (<span class="pl-k">array</span> <span class="pl-smi">$args</span>, <span class="pl-smi">$cmd</span>) {</span>
+<span class="pl-s1">        <span class="pl-smi">$data</span> <span class="pl-k">=</span> <span class="pl-c1">null</span>;</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">response</span>(<span class="pl-smi">$data</span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span></pre></div>
+
+<p><code>namespace/namespace.php</code>:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s1"></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">svc_namespace</span> {</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">method</span> (<span class="pl-k">array</span> <span class="pl-smi">$args</span>, <span class="pl-smi">$cmd</span>) {</span>
+<span class="pl-s1">        <span class="pl-smi">$data</span> <span class="pl-k">=</span> <span class="pl-c1">null</span>;</span>
+<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-c1">response</span>(<span class="pl-smi">$data</span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">}</span>
+<span class="pl-s1"></span></pre></div>
+
+<h3>
+<a id="extra-features" class="anchor" href="#extra-features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Extra features</h3>
+
+<p>In addition the engine provides Singleton instance of
+<a href="http://php.net/manual/en/book.pdo.php" title="PHP Data Object">PDO</a> connector for MySQL.
+This feature is optional.</p>
+
+<p>Connection credentials can be defined by <a href="#integration">configuration</a>.</p>
+
+<p>The function <code>db()</code> is available from any environment and returns the instance of connector.</p>
+
+<p>Usage example:</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-s1"><span class="pl-smi">$date</span> <span class="pl-k">=</span> db()<span class="pl-k">-&gt;</span>query(<span class="pl-s"><span class="pl-pds">'</span><span class="pl-s1"><span class="pl-k">SELECT</span> NOW() <span class="pl-k">AS</span> <span class="pl-k">date</span></span><span class="pl-pds">'</span></span>)<span class="pl-k">-&gt;</span>fetchObject()<span class="pl-k">-&gt;</span><span class="pl-smi">date</span>;</span></pre></div>
+
+<blockquote>
+<p>The complete documentation for PDO (PHP Data Objects) can be found
+<a href="http://php.net/manual/en/book.pdo.php" title="PHP Data Objects">here</a>.</p>
+</blockquote>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/rockwall/RockWall.PHP">RockWall.PHP</a> is maintained by <a href="https://github.com/rockwall">rockwall</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
