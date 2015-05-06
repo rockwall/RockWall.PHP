@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta content="application/xhtml+xml; charset=utf-8" http-equiv="content-type" />
+    <script src="https://leaverou.github.io/prefixfree/prefixfree.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <style type="text/css">
+        html, body {margin:0; padding:0; height:100%; font-family:sans-serif, Arial;}
+
+        /* .scrollbar */
+        .scrollbar {
+            resize:none;
+        }
+        .scrollbar::-webkit-scrollbar {
+            width: 10px;
+        }
+        .scrollbar::-webkit-scrollbar-thumb {
+            border: 3px solid transparent;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0);
+            background-clip: padding-box;
+        }
+        .scrollbar:hover::-webkit-scrollbar-thumb {
+            border: 3px solid transparent;
+            background: rgba(100, 100, 100, .5);
+            background-clip: padding-box;
+        }
+
+        #header {
+            position:relative;
+            height:46px;
+            line-height:46px;
+            margin:0;
+            padding:0 20px;
+            background:#333;
+            color:#eee;
+            font-size:20px;
+            box-shadow:inset 0 -8px 8px #222;
+            text-shadow: 0 -1px 0 #000;
+        }
+
+        #body {
+            position:absolute;
+            top:46px;
+            bottom:0;
+            left:0;
+            right:0;
+            overflow:auto;
+        }
+
+        .box {
+            display:block;
+            position:relative;
+            box-sizing:border-box;
+            height:50%;
+        }
+        @media all and (min-width:800px), all and (orientation: landscape) {
+            #body:before {
+                content:"";
+                display:block;
+                position:absolute;
+                left:50%;
+                width:1px;
+                height:100%;
+                margin-left:-1px;
+                z-index:100;
+                background:#3ad;
+                box-shadow: inset 0 0 1px #000;
+            }
+            #body:after {content:""; display:block; float:none; clear:both;}
+            #body > .box {
+                float:left;
+                height:100%;
+                width:50%;
+            }
+        }
+        .box > .head {
+            z-index:2;
+            display:block;
+            position:relative;
+            box-sizing:border-box;
+            width:100%;
+            height:32px;
+            line-height:32px;
+            padding:0 20px;
+            background:#3ad;
+            color:#fff;
+            text-shadow:0 -1px #07a;
+            box-shadow:0 2px 2px -1px #111;
+        }
+        .box > .body {
+            display:block;
+            position:absolute;
+            box-sizing:border-box;
+            top:32px;
+            left:0;
+            width:100%;
+            height:100%;
+            margin:-32px 0 0;
+            padding:42px 20px 10px;
+            overflow:auto;
+            outline:0 none;
+            border:0 none;
+            background:#222;
+            color:#3ad;
+            text-shadow:0 -1px 0 #111;
+        }
+        .box > .body::selection {
+            background:#999;
+            color:#fff;
+        }
+        .box.request .head {
+            display:table;
+            white-space:nowrap;
+        }
+        .box.request .head > * {
+            display:table-cell;
+            box-sizing:border-box;
+            vertical-align:middle;
+            font-style:normal;
+        }
+        .box.request .head > *:nth-child(odd) {width:1%;}
+        .box.request .head > *:first-child {padding-right:10px;}
+        .box.request .head input,
+        .box.request .head button {
+            cursor:pointer;
+            display:block;
+            position:relative;
+            box-sizing:border-box;
+            width:100%;
+            margin:0;
+            padding:0 10px;
+            border:1px solid #fff;
+            height:26px;
+            line-height:26px;
+            border-radius:0 3px 3px 0;
+            background:#3ad;
+            color:#fff;
+            text-shadow:0px -1px #07a;
+            outline:0 none;
+            transition:all .2s linear;
+        }
+        .box.request .head input {border-radius:3px 0 0 3px;}
+        .box.request .head input:focus {cursor:text;}
+        .box.request .head button {border-width:1px 1px 1px 0;}
+        .box.request .head input:focus,
+        .box.request .head button:active {background:#fff; color:#3ad; text-shadow:none;}
+        .box.request .head input::-webkit-input-placeholder {color:#fff}
+        .box.request .head input:-moz-placeholder {color:#fff}
+        .box.request .head input::-moz-placeholder {color:#fff}
+        .box.request .head input:-ms-input-placeholder {color:#fff}
+
+        .box.request .head input:focus::-webkit-input-placeholder {color:#3ad}
+        .box.request .head input:focus:-moz-placeholder {color:#3ad}
+        .box.request .head input:focus::-moz-placeholder {color:#3ad}
+        .box.request .head input:focus:-ms-input-placeholder {color:#3ad}
+
+        .box.request .head > *:first-child:before {content:"Request URL";}
+        [type=submit]:before {content:"Submit ✓";}
+        @media all and (max-width:400px), all and (orientation: landscape) {
+            [type=submit]:before {content:"✓";}
+            .box.request .head > *:first-child:before {content:"URL";}
+            #header {text-align:center;}
+        }
+
+        .box.response .head[time]:not([time=""]):after {
+            content: attr(time);
+            position:absolute;
+            right:20px;
+            font-style:normal;
+            font-size:14px;
+            vertical-align:top;
+            color:#333;
+            text-shadow:0px 1px #5cf;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="header">SVC Server sandbox</h1>
+    <form id="body" action="javascript:void(0)">
+        <div class="box request">
+            <label class="head">
+                <i><!--:before--></i>
+                <i><input type="text" spellcheck="false" placeholder="https://your.custom.url/..." /></i>
+                <i><button type="submit"></button></i>
+            </label>
+            <textarea class="body scrollbar" spellcheck="false">{
+  "context":
+    {
+      "networkId" : 12345,
+      "deviceId"  : "ABCDEF0123456789"
+    },
+
+  "request":
+    [
+      { "cmd":"namespace/method" , "args":{"awesome":"service"} },
+      { "cmd":"&namespace/method" , "args":{"mod":"Class Singleton"} },
+      { "cmd":"!namespace/method" , "args":{"mod":"Class Singleton reset"} },
+      { "cmd":"@namespace/method" , "args":{"mod":"New class instance"} },
+      { "cmd":"namespace/staticMethod" , "args":{"mod":"Static method"} },
+      { "cmd":"namespace/staticMethod" , "args":{"mod":"Static method"} },
+      { "cmd":"namespace/class/method" , "args":{"hello":"world"} },
+      { "cmd":"blah-blah-blah" },
+      { "cmd":"not/existing/endpoint" }
+    ]
+}</textarea>
+        </div>
+
+        <div class="box response">
+            <label class="head">Response</label>
+            <textarea class="body scrollbar" placeholder="Nothing to show yet..." spellcheck="false" readonly></textarea>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+
+        function isJSON (string) {
+            if (typeof string != 'string' || /^\s*$/.test(string)) return false;
+            var str = string;
+            str = str.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
+                     .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+                     .replace(/(?:^|:|,)(?:\s*\[)+/g, '');
+            return (/^[\],:{}\s]*$/).test(str);
+        }
+
+        function updateTime () {
+            var o = document.querySelector('.box.response .head');
+            if (o) {
+                o.setAttribute('time',
+                    (new Date).toISOString()
+                    .replace(
+                        /^(\d{4}-\d{2}-\d{2}\S)(\d{2}\:\d{2}\:\d{2}\.\d{3})\S/ig,
+                        '$2'
+                    )
+                );
+            }
+        }
+
+        function setResponse (v) {
+            updateTime();
+            var body = document.querySelector('.box.response .body');
+            if (body) {
+                body.value = v;
+            }
+        }
+
+        function onSubmit (e) {
+            var request = document.querySelector('.box.request .body');
+            var url = document.querySelector('.box.request .head input[type=text]');
+            url = (url && url.value.length) ? url.value : '.';
+            setResponse('Please wait...');
+            try {
+                var body = (new Function ('return' + request.value))();
+                $.ajax(url, {
+                    type: 'POST',
+                    dataType: 'text',
+                    data: body,
+                    error: function (xhr, error) {
+                        setResponse('XHR error: "' + error + '"');
+                    },
+                    success: function (r) {
+                        if (isJSON(r)) {
+                            try {
+                                setResponse(JSON.stringify(JSON.parse(r), null, 2));
+                                return;
+                            }
+                            catch (e) {};
+                        }
+                        setResponse('WARNING!\n\nThe server returns not JSON object:\n___________________________________\n\n' + r);
+                    }
+                });
+            }
+            catch (e) {
+                setResponse('Syntax error. Please, check your request object');
+            };
+        }
+        document.querySelector('#body').addEventListener('submit', onSubmit, false);
+    </script>
+
+</body>
+</html>

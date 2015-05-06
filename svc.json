@@ -1,0 +1,42 @@
+// RESPONSE ITEM
+{
+    "error" : "",   // If failed
+    "code"  : 0     // If failed
+    "data"  : null, // If success
+}
+
+// REQUEST
+{
+    "context":
+    {
+        "networkId" : 12345,
+        "deviceId"  : "A08FJKHJG67443EV"
+    },
+
+    "request":
+    [
+        { "cmd":"namespace/class/method" , "args":{/*...*/} }, // 0
+        { "cmd":"namespace/class/method" , "args":{/*...*/} }, // 1
+        { "cmd":"namespace/class/method" , "args":{/*...*/} }, // 2
+        { "cmd":"namespace/class/method" , "args":{/*...*/} }, // 3
+        { "cmd":"namespace/class/method" , "args":{/*...*/} }, // 4
+        { "cmd":"namespace/class/method" , "args":{/*...*/} }, // 5
+        { "cmd":"namespace/class/method" , "args":{/*...*/} }  // N
+    ]
+}
+
+// RESPONSE
+{
+    "error" : "",   // If failed
+    "code"  : 0     // If failed
+    "data"  :       // If success
+    [
+        {/* RESPONSE ITEM */},                                 // 0
+        {/* RESPONSE ITEM */},                                 // 1
+        {/* RESPONSE ITEM */},                                 // 2
+        {/* RESPONSE ITEM */},                                 // 3
+        {/* RESPONSE ITEM */},                                 // 4
+        {/* RESPONSE ITEM */},                                 // 5
+        {/* RESPONSE ITEM */},                                 // 6
+    ]
+}
