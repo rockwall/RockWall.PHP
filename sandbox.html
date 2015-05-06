@@ -184,6 +184,7 @@
             position:fixed;
             bottom:0;
             right:0;
+            border-radius:4px 0 0;
             transform:rotate(-45deg)
                     translate3d(65px,15px,0);
             box-shadow:0 0 10px #fff,
@@ -192,7 +193,7 @@
             background:#eee;
             color:#111;
             text-shadow:0 1px #fff;
-            font:normal bold 12px/12px sans-serif;
+            font:normal bold 12px/12px Arial, sans-serif;
             text-decoration:none;
             white-space:nowrap;
             transition:all .1s linear;
@@ -203,10 +204,11 @@
             position:absolute;
             top:2px;
             bottom:2px;
-            left:0;
+            left:2px;
             width:100%;
             border:0 dotted #ccc;
-            border-width:2px 0;
+            border-width:2px 0 2px 2px;
+            border-radius:4px 0 0;
         }
         .fork-me:hover {
             background:#09e;
