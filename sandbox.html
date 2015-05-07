@@ -178,45 +178,48 @@
             text-shadow:0px 1px #5cf;
         }
 
-        .fork-me {
-            display:block;
-            z-index:100;
-            position:fixed;
-            bottom:0;
-            right:0;
-            border-radius:4px 0 0;
-            transform:rotate(-45deg)
-                    translate3d(65px,15px,0);
-            box-shadow:0 0 10px #fff,
-                     inset 0 0 0 2px #fff;
-            padding:8px 50px;
-            background:#eee;
-            color:#111;
-            text-shadow:0 1px #fff;
-            font:normal bold 12px/12px Arial, sans-serif;
-            text-decoration:none;
-            white-space:nowrap;
-            transition:all .1s linear;
-        }
-        .fork-me:before {
-            content:"";
-            display:block;
-            position:absolute;
-            top:2px;
-            bottom:2px;
-            left:2px;
-            width:100%;
-            border:0 dotted #ccc;
-            border-width:2px 0 2px 2px;
-            border-radius:4px 0 0;
-        }
-        .fork-me:hover {
-            background:#09e;
-            box-shadow:0 0 15px #000;
-            color:#fff;
-            text-shadow:0 -1px #048;
-        }
-        .fork-me:hover:before {border-color:#2bf}
+    .ribbon {
+        display:block;
+        position:fixed;
+        z-index:100;
+        width:250px;
+        height:28px;
+        bottom:0;
+        right:0;
+        margin:0;
+        padding:0;
+        border-radius:4px 0 0;
+        transform:rotate(-45deg) translate3d(78px,42px,0);
+        box-shadow:0 0 10px #fff,
+        inset 0 0 0 2px #fff;
+        background:#eee;
+        color:#111;
+        text-shadow:0 1px #fff;
+        font:normal bold 12px/28px Arial, Helvetica, Tahoma, Verdana, sans-serif;
+        text-align:center;
+        text-decoration:none;
+        white-space:nowrap;
+        transition:all .1s linear;
+    }
+    .ribbon:before {
+        content:"";
+        display:block;
+        position:absolute;
+        top:2px;
+        bottom:2px;
+        left:2px;
+        right:0;
+        border:0 dotted #ccc;
+        border-width:2px 0 2px 2px;
+        border-radius:4px 0 0;
+    }
+    .ribbon:hover {
+        background:#09e;
+        box-shadow:0 0 15px #000;
+        color:#fff;
+        text-shadow:0 -1px #048;
+    }
+    .ribbon:hover:before {border-color:#2bf}
     </style>
 </head>
 <body>
@@ -256,7 +259,7 @@
         </div>
     </form>
 
-    <a class="fork-me" target="_blank" href="https://github.com/rockwall/RockWall.PHP">Fork me on GitHub</a>
+    <a class="ribbon" target="_blank" href="https://rockwall.github.io/RockWall.PHP/">Documentation</a>
 
     <script type="text/javascript">
 
