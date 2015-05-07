@@ -164,6 +164,12 @@ The modifier is a command prefix that can be one of the follow:
 |    &     | `Default` Uses Singleton instance of class or creates if it in not exists yet | &namespace/class/method |
 |    !     | Replaces old Singleton instance by new instance of class and uses it          | !namespace/class/method |
 
+> Note: On the server-side the method, that declared as `static` method will be executed
+> as `static` method of class, independently by modifiers.
+
+```php
+public static function someMethodName (array $args, $cmd) {}
+```
 
 **Example for JavaScript AJAX request by using jQuery**
 
@@ -473,6 +479,13 @@ class svc_namespace {
 
 }
 
+```
+
+> Note: Be careful! The method, that declared as `static` method will be executed
+> as `static` method of class, independently by modifiers.
+
+```php
+public static function method (array $args, $cmd) {}
 ```
 
 ### Extra features
