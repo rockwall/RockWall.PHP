@@ -209,6 +209,13 @@ The modifier is a command prefix that can be one of the follow:</p>
 </tbody>
 </table>
 
+<blockquote>
+<p>Note: On the server-side the method, that declared as <code>static</code> method will be executed
+as <code>static</code> method of class, independently by modifiers.</p>
+</blockquote>
+
+<div class="highlight highlight-php"><pre><span class="pl-s1"><span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">function</span> <span class="pl-en">someMethodName</span> (<span class="pl-k">array</span> <span class="pl-smi">$args</span>, <span class="pl-smi">$cmd</span>) {}</span></pre></div>
+
 <p><strong>Example for JavaScript AJAX request by using jQuery</strong></p>
 
 <div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> url <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>//your.server.url<span class="pl-pds">'</span></span>;
@@ -512,6 +519,13 @@ allows to declare besides of response data also error of execution.</li>
 <span class="pl-s1"></span>
 <span class="pl-s1">}</span>
 <span class="pl-s1"></span></pre></div>
+
+<blockquote>
+<p>Note: Be careful! The method, that declared as <code>static</code> method will be executed
+as <code>static</code> method of class, independently by modifiers.</p>
+</blockquote>
+
+<div class="highlight highlight-php"><pre><span class="pl-s1"><span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">function</span> <span class="pl-en">method</span> (<span class="pl-k">array</span> <span class="pl-smi">$args</span>, <span class="pl-smi">$cmd</span>) {}</span></pre></div>
 
 <h3>
 <a id="extra-features" class="anchor" href="#extra-features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Extra features</h3>
